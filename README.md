@@ -17,7 +17,8 @@ skip.cmd
 ## 📋 Features
 
 - ✅ **Interactive Setup** - Prompts for username, password, and display name
-- ✅ **No Auto-Login** - Disabled by default for security
+- ✅ **Auto-Login Once** - Logs in automatically ONE time to complete setup, then requires password
+- ✅ **No Security Questions** - Skips the security questions prompt entirely
 - ✅ **Multiple Profiles** - Choose from 4 different debloat levels
 - ✅ **Privacy-Focused** - Removes telemetry and bloatware
 - ✅ **Easy Updates** - Hosted on GitHub Pages for reliability
@@ -54,6 +55,8 @@ skip.cmd
 
 All profiles include:
 - ✅ Local account creation (bypasses Microsoft account)
+- ✅ Auto-login once to complete setup automatically
+- ✅ No security questions required
 - ✅ Disabled Copilot
 - ✅ Disabled Teams auto-install
 - ✅ Disabled password expiration
@@ -73,8 +76,10 @@ If you prefer to download and review the files first:
 
 - All scripts are open source and can be reviewed before use
 - Passwords are stored in plaintext in the unattend.xml temporarily (deleted after setup)
+- Auto-login happens **only once** during initial setup to complete installation
+- After the first login, your password will be required normally
+- No security questions are required (disabled via registry)
 - No data is collected or sent anywhere
-- Auto-login is **disabled** by default
 
 ## 🌐 Using Your Own Host
 
