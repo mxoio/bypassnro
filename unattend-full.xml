@@ -26,6 +26,15 @@
 					</LocalAccount>
 				</LocalAccounts>
 			</UserAccounts>
+			<AutoLogon>
+				<Username>PLACEHOLDER_USERNAME</Username>
+				<Enabled>true</Enabled>
+				<LogonCount>1</LogonCount>
+				<Password>
+					<Value>PLACEHOLDER_PASSWORD</Value>
+					<PlainText>true</PlainText>
+				</Password>
+			</AutoLogon>
 			<OOBE>
 				<ProtectYourPC>3</ProtectYourPC>
 				<HideEULAPage>true</HideEULAPage>
@@ -34,81 +43,86 @@
 			</OOBE>
 			<FirstLogonCommands>
 				<SynchronousCommand wcm:action="add">
+					<Order>1</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v NoLocalPasswordResetQuestions /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Disable security questions</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>2</Order>
+					<CommandLine>powershell.exe -NoProfile -Command "$apps = @('Microsoft.Microsoft3DViewer', 'Microsoft.BingSearch', 'Microsoft.WindowsCamera', 'Clipchamp.Clipchamp', 'Microsoft.549981C3F5F10', 'Microsoft.Windows.DevHome', 'MicrosoftCorporationII.MicrosoftFamily', 'Microsoft.WindowsFeedbackHub', 'Microsoft.GetHelp', 'Microsoft.Getstarted', 'microsoft.windowscommunicationsapps', 'Microsoft.WindowsMaps', 'Microsoft.MixedReality.Portal', 'Microsoft.BingNews', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.Office.OneNote', 'Microsoft.OutlookForWindows', 'Microsoft.MSPaint', 'Microsoft.People', 'Microsoft.Windows.Photos', 'Microsoft.PowerAutomateDesktop', 'MicrosoftCorporationII.QuickAssist', 'Microsoft.SkypeApp', 'Microsoft.MicrosoftSolitaireCollection', 'Microsoft.MicrosoftStickyNotes', 'MicrosoftTeams', 'Microsoft.Todos', 'Microsoft.WindowsSoundRecorder', 'Microsoft.BingWeather', 'Microsoft.Xbox.TCUI', 'Microsoft.XboxApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay', 'Microsoft.XboxIdentityProvider', 'Microsoft.XboxSpeechToTextOverlay', 'Microsoft.GamingApp', 'Microsoft.ZuneMusic', 'Microsoft.ZuneVideo'); foreach($app in $apps) { Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue; Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue }"</CommandLine>
+					<Description>Remove all bloatware apps</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>3</Order>
+					<CommandLine>powershell.exe -NoProfile -Command "$features = @('Print.Fax.Scan~~~~0.0.1.0', 'Browser.InternetExplorer~~~~0.0.11.0', 'MathRecognizer~~~~0.0.1.0', 'OpenSSH.Client~~~~0.0.1.0', 'Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0', 'App.Support.QuickAssist~~~~0.0.1.0', 'App.StepsRecorder~~~~0.0.1.0', 'Media.WindowsMediaPlayer~~~~0.0.12.0', 'Microsoft.Windows.WordPad~~~~0.0.1.0'); foreach($feature in $features) { Get-WindowsCapability -Online | Where-Object Name -like $feature | Remove-WindowsCapability -Online -ErrorAction SilentlyContinue }"</CommandLine>
+					<Description>Remove optional features</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>4</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Disable Teams auto-install</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>5</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Disable Copilot</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>6</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v SearchboxTaskbarMode /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Hide search box</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>7</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowTaskViewButton /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Hide Task View button</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
 					<Order>8</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Left-align taskbar</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>9</Order>
 					<CommandLine>powershell.exe -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Dsh' -Name 'AllowNewsAndInterests' -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue"</CommandLine>
 					<Description>Disable widgets</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>9</Order>
+					<Order>10</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v DisableSearchBoxSuggestions /t REG_DWORD /d 1 /f</CommandLine>
 					<Description>Disable search suggestions</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>10</Order>
+					<Order>11</Order>
 					<CommandLine>cmd.exe /c net accounts /maxpwage:UNLIMITED</CommandLine>
 					<Description>Disable password expiration</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>11</Order>
+					<Order>12</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f</CommandLine>
 					<Description>Enable long paths</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>12</Order>
+					<Order>13</Order>
 					<CommandLine>cmd.exe /c del /f /q "C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"</CommandLine>
 					<Description>Remove OneDrive shortcut</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>13</Order>
+					<Order>14</Order>
 					<CommandLine>cmd.exe /c del /f /q "C:\Windows\System32\OneDriveSetup.exe"</CommandLine>
 					<Description>Remove OneDrive setup</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>14</Order>
+					<Order>15</Order>
 					<CommandLine>powershell.exe -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'Recall' -NoRestart -ErrorAction SilentlyContinue"</CommandLine>
 					<Description>Disable Recall</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>15</Order>
+					<Order>16</Order>
 					<CommandLine>cmd.exe /c del /f /q "C:\Windows\Panther\unattend.xml"</CommandLine>
 					<Description>Clean up unattend file</Description>
 				</SynchronousCommand>
 			</FirstLogonCommands>
 		</component>
 	</settings>
-</unattend>:action="add">
-					<Order>1</Order>
-					<CommandLine>powershell.exe -NoProfile -Command "$apps = @('Microsoft.Microsoft3DViewer', 'Microsoft.BingSearch', 'Microsoft.WindowsCamera', 'Clipchamp.Clipchamp', 'Microsoft.549981C3F5F10', 'Microsoft.Windows.DevHome', 'MicrosoftCorporationII.MicrosoftFamily', 'Microsoft.WindowsFeedbackHub', 'Microsoft.GetHelp', 'Microsoft.Getstarted', 'microsoft.windowscommunicationsapps', 'Microsoft.WindowsMaps', 'Microsoft.MixedReality.Portal', 'Microsoft.BingNews', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.Office.OneNote', 'Microsoft.OutlookForWindows', 'Microsoft.MSPaint', 'Microsoft.People', 'Microsoft.Windows.Photos', 'Microsoft.PowerAutomateDesktop', 'MicrosoftCorporationII.QuickAssist', 'Microsoft.SkypeApp', 'Microsoft.MicrosoftSolitaireCollection', 'Microsoft.MicrosoftStickyNotes', 'MicrosoftTeams', 'Microsoft.Todos', 'Microsoft.WindowsSoundRecorder', 'Microsoft.BingWeather', 'Microsoft.Xbox.TCUI', 'Microsoft.XboxApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay', 'Microsoft.XboxIdentityProvider', 'Microsoft.XboxSpeechToTextOverlay', 'Microsoft.GamingApp', 'Microsoft.ZuneMusic', 'Microsoft.ZuneVideo'); foreach($app in $apps) { Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue; Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue }"</CommandLine>
-					<Description>Remove all bloatware apps</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>2</Order>
-					<CommandLine>powershell.exe -NoProfile -Command "$features = @('Print.Fax.Scan~~~~0.0.1.0', 'Browser.InternetExplorer~~~~0.0.11.0', 'MathRecognizer~~~~0.0.1.0', 'OpenSSH.Client~~~~0.0.1.0', 'Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0', 'App.Support.QuickAssist~~~~0.0.1.0', 'App.StepsRecorder~~~~0.0.1.0', 'Media.WindowsMediaPlayer~~~~0.0.12.0', 'Microsoft.Windows.WordPad~~~~0.0.1.0'); foreach($feature in $features) { Get-WindowsCapability -Online | Where-Object Name -like $feature | Remove-WindowsCapability -Online -ErrorAction SilentlyContinue }"</CommandLine>
-					<Description>Remove optional features</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>3</Order>
-					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</CommandLine>
-					<Description>Disable Teams auto-install</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>4</Order>
-					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f</CommandLine>
-					<Description>Disable Copilot</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>5</Order>
-					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v SearchboxTaskbarMode /t REG_DWORD /d 0 /f</CommandLine>
-					<Description>Hide search box</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>6</Order>
-					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowTaskViewButton /t REG_DWORD /d 0 /f</CommandLine>
-					<Description>Hide Task View button</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm:action="add">
-					<Order>7</Order>
-					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f</CommandLine>
-					<Description>Left-align taskbar</Description>
-				</SynchronousCommand>
-				<SynchronousCommand wcm
+</unattend>
