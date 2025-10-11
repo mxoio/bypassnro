@@ -86,19 +86,26 @@ echo $xml = [xml](Get-Content "C:\Windows\Panther\unattend.xml") > C:\Windows\Pa
 echo $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable) >> C:\Windows\Panther\customize.ps1
 echo $ns.AddNamespace("u", "urn:schemas-microsoft-com:unattend") >> C:\Windows\Panther\customize.ps1
 echo $ns.AddNamespace("wcm", "http://schemas.microsoft.com/WMIConfig/2002/State") >> C:\Windows\Panther\customize.ps1
+echo. >> C:\Windows\Panther\customize.ps1
+echo # Update LocalAccount >> C:\Windows\Panther\customize.ps1
 echo $accounts = $xml.SelectNodes("//u:LocalAccount", $ns) >> C:\Windows\Panther\customize.ps1
 echo foreach($account in $accounts) { >> C:\Windows\Panther\customize.ps1
-echo     if($account.Name -eq "Admin" -or $account.Name -eq "PLACEHOLDER_USERNAME") { >> C:\Windows\Panther\customize.ps1
+echo     if($account.Name -eq "PLACEHOLDER_USERNAME") { >> C:\Windows\Panther\customize.ps1
 echo         $account.Name = "!USERNAME_INPUT!" >> C:\Windows\Panther\customize.ps1
 echo         $account.DisplayName = "!DISPLAYNAME_INPUT!" >> C:\Windows\Panther\customize.ps1
 echo         $account.Password.Value = "!PASSWORD_INPUT!" >> C:\Windows\Panther\customize.ps1
 echo     } >> C:\Windows\Panther\customize.ps1
 echo } >> C:\Windows\Panther\customize.ps1
+echo. >> C:\Windows\Panther\customize.ps1
+echo # Update AutoLogon >> C:\Windows\Panther\customize.ps1
 echo $autologon = $xml.SelectSingleNode("//u:AutoLogon", $ns) >> C:\Windows\Panther\customize.ps1
 echo if($autologon) { >> C:\Windows\Panther\customize.ps1
-echo     $autologon.Username = "!USERNAME_INPUT!" >> C:\Windows\Panther\customize.ps1
-echo     $autologon.Password.Value = "!PASSWORD_INPUT!" >> C:\Windows\Panther\customize.ps1
+echo     $usernameNode = $autologon.SelectSingleNode("u:Username", $ns) >> C:\Windows\Panther\customize.ps1
+echo     if($usernameNode) { $usernameNode.InnerText = "!USERNAME_INPUT!" } >> C:\Windows\Panther\customize.ps1
+echo     $passwordNode = $autologon.SelectSingleNode("u:Password/u:Value", $ns) >> C:\Windows\Panther\customize.ps1
+echo     if($passwordNode) { $passwordNode.InnerText = "!PASSWORD_INPUT!" } >> C:\Windows\Panther\customize.ps1
 echo } >> C:\Windows\Panther\customize.ps1
+echo. >> C:\Windows\Panther\customize.ps1
 echo $xml.Save("C:\Windows\Panther\unattend.xml") >> C:\Windows\Panther\customize.ps1
 
 REM Run the customization script
