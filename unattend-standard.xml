@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+	<settings pass="windowsPE">
+		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+			<UserData>
+				<ProductKey>
+					<Key>00000-00000-00000-00000-00000</Key>
+					<WillShowUI>OnError</WillShowUI>
+				</ProductKey>
+				<AcceptEula>true</AcceptEula>
+			</UserData>
+		</component>
+	</settings>
+	<settings pass="oobeSystem">
+		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+			<UserAccounts>
+				<LocalAccounts>
+					<LocalAccount wcm:action="add">
+						<n>PLACEHOLDER_USERNAME</n>
+						<DisplayName>PLACEHOLDER_DISPLAYNAME</DisplayName>
+						<Group>Administrators</Group>
+						<Password>
+							<Value>PLACEHOLDER_PASSWORD</Value>
+							<PlainText>true</PlainText>
+						</Password>
+					</LocalAccount>
+				</LocalAccounts>
+			</UserAccounts>
+			<OOBE>
+				<ProtectYourPC>3</ProtectYourPC>
+				<HideEULAPage>true</HideEULAPage>
+				<HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+				<HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+			</OOBE>
+			<FirstLogonCommands>
+				<SynchronousCommand wcm:action="add">
+					<Order>1</Order>
+					<CommandLine>powershell.exe -NoProfile -Command "$apps = @('Microsoft.549981C3F5F10', 'Microsoft.BingNews', 'Microsoft.BingWeather', 'Microsoft.GamingApp', 'Microsoft.GetHelp', 'Microsoft.Getstarted', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.MicrosoftSolitaireCollection', 'Microsoft.People', 'Microsoft.WindowsFeedbackHub', 'MicrosoftTeams', 'Microsoft.Todos', 'Microsoft.PowerAutomateDesktop', 'Microsoft.MicrosoftStickyNotes', 'Clipchamp.Clipchamp', 'Microsoft.YourPhone'); foreach($app in $apps) { Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue }"</CommandLine>
+					<Description>Remove bloatware apps</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>2</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Disable Teams auto-install</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>3</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Disable Copilot</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>4</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v SearchboxTaskbarMode /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Hide search box</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>5</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowTaskViewButton /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Hide Task View button</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>6</Order>
+					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f</CommandLine>
+					<Description>Left-align taskbar</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>7</Order>
+					<CommandLine>powershell.exe -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Dsh' -Name 'AllowNewsAndInterests' -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue"</CommandLine>
+					<Description>Disable widgets</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>8</Order>
+					<CommandLine>cmd.exe /c net accounts /maxpwage:UNLIMITED</CommandLine>
+					<Description>Disable password expiration</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>9</Order>
+					<CommandLine>cmd.exe /c del /f /q "C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"</CommandLine>
+					<Description>Remove OneDrive shortcut</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>10</Order>
+					<CommandLine>cmd.exe /c del /f /q "C:\Windows\Panther\unattend.xml"</CommandLine>
+					<Description>Clean up unattend file</Description>
+				</SynchronousCommand>
+			</FirstLogonCommands>
+		</component>
+	</settings>
+</unattend>
