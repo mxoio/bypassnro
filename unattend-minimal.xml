@@ -16,7 +16,7 @@
 			<UserAccounts>
 				<LocalAccounts>
 					<LocalAccount wcm:action="add">
-						<Name>PLACEHOLDER_USERNAME</Name>
+						<n>PLACEHOLDER_USERNAME</n>
 						<DisplayName>PLACEHOLDER_DISPLAYNAME</DisplayName>
 						<Group>Administrators</Group>
 						<Password>
@@ -26,6 +26,15 @@
 					</LocalAccount>
 				</LocalAccounts>
 			</UserAccounts>
+			<AutoLogon>
+				<Username>PLACEHOLDER_USERNAME</Username>
+				<Enabled>true</Enabled>
+				<LogonCount>1</LogonCount>
+				<Password>
+					<Value>PLACEHOLDER_PASSWORD</Value>
+					<PlainText>true</PlainText>
+				</Password>
+			</AutoLogon>
 			<OOBE>
 				<ProtectYourPC>3</ProtectYourPC>
 				<HideEULAPage>true</HideEULAPage>
@@ -35,26 +44,36 @@
 			<FirstLogonCommands>
 				<SynchronousCommand wcm:action="add">
 					<Order>1</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /v BypassNRO /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Set BypassNRO for future use</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>2</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v NoLocalPasswordResetQuestions /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Disable security questions</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>3</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</CommandLine>
 					<Description>Disable Teams auto-install</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>2</Order>
+					<Order>4</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f</CommandLine>
 					<Description>Disable Copilot</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>3</Order>
+					<Order>5</Order>
 					<CommandLine>powershell.exe -Command "Get-AppxPackage -Name 'Microsoft.549981C3F5F10' | Remove-AppxPackage -ErrorAction SilentlyContinue"</CommandLine>
 					<Description>Remove Cortana</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>4</Order>
+					<Order>6</Order>
 					<CommandLine>powershell.exe -Command "Get-AppxPackage -Name 'Microsoft.BingNews' | Remove-AppxPackage -ErrorAction SilentlyContinue"</CommandLine>
 					<Description>Remove News</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>5</Order>
+					<Order>7</Order>
 					<CommandLine>cmd.exe /c del /f /q "C:\Windows\Panther\unattend.xml"</CommandLine>
 					<Description>Clean up unattend file</Description>
 				</SynchronousCommand>
