@@ -70,7 +70,7 @@ echo.
 echo Downloading configuration file...
 
 REM Download the selected unattend.xml template
-curl -L -o C:\Windows\Panther\unattend.xml https://mxoio.github.io/bypassnro/unattend-!PROFILE_NAME!.xml
+curl -L -o C:\Windows\Panther\unattend.xml https://bypassnro.mxioi.uk/unattend-!PROFILE_NAME!.xml
 
 if errorlevel 1 (
     echo Failed to download configuration file!
