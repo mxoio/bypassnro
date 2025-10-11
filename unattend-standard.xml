@@ -26,51 +26,64 @@
 					</LocalAccount>
 				</LocalAccounts>
 			</UserAccounts>
+			<AutoLogon>
+				<Username>PLACEHOLDER_USERNAME</Username>
+				<Enabled>true</Enabled>
+				<LogonCount>1</LogonCount>
+				<Password>
+					<Value>PLACEHOLDER_PASSWORD</Value>
+					<PlainText>true</PlainText>
+				</Password>
+			</AutoLogon>
 			<OOBE>
 				<ProtectYourPC>3</ProtectYourPC>
 				<HideEULAPage>true</HideEULAPage>
 				<HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
 				<HideOnlineAccountScreens>true</HideOnlineAccountScreens>
-				<HideLocalAccountScreen>false</HideLocalAccountScreen>
 			</OOBE>
 			<FirstLogonCommands>
 				<SynchronousCommand wcm:action="add">
 					<Order>1</Order>
+					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v NoLocalPasswordResetQuestions /t REG_DWORD /d 1 /f</CommandLine>
+					<Description>Disable security questions</Description>
+				</SynchronousCommand>
+				<SynchronousCommand wcm:action="add">
+					<Order>2</Order>
 					<CommandLine>powershell.exe -NoProfile -Command "$apps = @('Microsoft.549981C3F5F10', 'Microsoft.BingNews', 'Microsoft.BingWeather', 'Microsoft.GamingApp', 'Microsoft.GetHelp', 'Microsoft.Getstarted', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.MicrosoftSolitaireCollection', 'Microsoft.People', 'Microsoft.WindowsFeedbackHub', 'MicrosoftTeams', 'Microsoft.Todos', 'Microsoft.PowerAutomateDesktop', 'Microsoft.MicrosoftStickyNotes', 'Clipchamp.Clipchamp', 'Microsoft.YourPhone'); foreach($app in $apps) { Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue }"</CommandLine>
 					<Description>Remove bloatware apps</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>2</Order>
+					<Order>3</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</CommandLine>
 					<Description>Disable Teams auto-install</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>3</Order>
+					<Order>4</Order>
 					<CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f</CommandLine>
 					<Description>Disable Copilot</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>4</Order>
+					<Order>5</Order>
 					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v SearchboxTaskbarMode /t REG_DWORD /d 0 /f</CommandLine>
 					<Description>Hide search box</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>5</Order>
+					<Order>6</Order>
 					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowTaskViewButton /t REG_DWORD /d 0 /f</CommandLine>
 					<Description>Hide Task View button</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>6</Order>
+					<Order>7</Order>
 					<CommandLine>cmd.exe /c reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f</CommandLine>
 					<Description>Left-align taskbar</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>7</Order>
+					<Order>8</Order>
 					<CommandLine>powershell.exe -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Dsh' -Name 'AllowNewsAndInterests' -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue"</CommandLine>
 					<Description>Disable widgets</Description>
 				</SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<Order>8</Order>
+					<Order>9</Order>
 					<CommandLine>cmd.exe /c net accounts /maxpwage:UNLIMITED</CommandLine>
 					<Description>Disable password expiration</Description>
 				</SynchronousCommand>
