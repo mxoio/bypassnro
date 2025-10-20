@@ -71,14 +71,32 @@ echo.
 echo Username: %username%
 echo Password: None (you can set one after first login)
 echo.
-echo The system will now reboot and:
-echo 1. Skip Microsoft account requirement
-echo 2. Create your local account
-echo 3. Auto-login once to complete Windows setup
-echo 4. Remove bloatware in the background
+echo The system will now:
+echo 1. Apply unattend.xml using Sysprep
+echo 2. Reboot to complete OOBE
+echo 3. Create your local account
+echo 4. Auto-login once to finish setup
+echo 5. Remove bloatware in the background
 echo.
-echo Press any key to reboot...
+echo Press any key to continue...
 pause >nul
 
-:: Reboot to apply unattend.xml
-shutdown /r /t 3 /c "Rebooting to apply Windows OOBE bypass"
+:: Apply unattend.xml using Sysprep (THIS IS THE KEY!)
+echo.
+echo Applying configuration with Sysprep...
+%WINDIR%\System32\Sysprep\Sysprep.exe /oobe /unattend:C:\Windows\Panther\unattend.xml /reboot
+
+:: If Sysprep fails, show error
+if errorlevel 1 (
+    echo.
+    echo ERROR: Sysprep failed to apply unattend.xml
+    echo Error code: %errorlevel%
+    echo.
+    echo Troubleshooting:
+    echo 1. Make sure you're running this during OOBE setup
+    echo 2. Check if C:\Windows\Panther\unattend.xml exists
+    echo 3. Try running: type C:\Windows\Panther\unattend.xml
+    echo.
+    pause
+    exit /b 1
+)
