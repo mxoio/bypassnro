@@ -1,97 +1,58 @@
 @echo off
-setlocal enabledelayedexpansion
-
 echo ===============================================
 echo   Windows 11 Local Account Bypass
-echo   Based on Chris Titus Tech's method
+echo   Using Chris Titus Tech's Method (FIXED)
 echo ===============================================
 echo.
-echo This script will:
-echo - Download Chris Titus Tech's unattend.xml
-echo - Place it where Windows will find it
-echo - Restart OOBE to apply the configuration
-echo.
-echo The unattend.xml will:
-echo - Create a local "Admin" account (no password)
-echo - Bypass Microsoft account requirement
+echo This will:
+echo - Set registry key to bypass network requirement
+echo - Download and apply unattend.xml
+echo - Create local "Admin" account (no password)
+echo - Skip Microsoft account screen completely
 echo - Remove bloatware automatically
 echo.
 pause
 
-:: Get script directory
-set "SCRIPT_DIR=%~dp0"
-
 echo.
-echo Step 1: Preparing unattend.xml...
-echo.
-
-:: Check for local unattend.xml first
-if exist "%SCRIPT_DIR%unattend.xml" (
-    echo Using local unattend.xml...
-    copy /Y "%SCRIPT_DIR%unattend.xml" "C:\Windows\Panther\unattend.xml" >nul 2>&1
-    if errorlevel 1 (
-        echo ERROR: Failed to copy local unattend.xml
-        pause
-        exit /b 1
-    )
-    echo Local file copied successfully!
+echo Step 1: Setting registry bypass...
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE /v BypassNRO /t REG_DWORD /d 1 /f
+if errorlevel 1 (
+    echo WARNING: Could not set registry key (may need admin rights)
 ) else (
-    echo Local unattend.xml not found, downloading from GitHub...
-    curl -L -o C:\Windows\Panther\unattend.xml https://raw.githubusercontent.com/ChrisTitusTech/bypassnro/main/unattend.xml
-
-    if errorlevel 1 (
-        echo ERROR: Failed to download unattend.xml
-        echo.
-        echo Make sure you have internet connection, or place unattend.xml
-        echo in the same folder as this script
-        pause
-        exit /b 1
-    )
-    echo Downloaded successfully!
+    echo Registry bypass set successfully!
 )
 
-:: Verify the file exists
-if not exist "C:\Windows\Panther\unattend.xml" (
+echo.
+echo Step 2: Downloading unattend.xml...
+curl -L -o C:\Windows\Panther\unattend.xml https://raw.githubusercontent.com/mxoio/bypassnro/main/unattend.xml
+
+if errorlevel 1 (
     echo.
-    echo ERROR: unattend.xml was not created!
+    echo ERROR: Failed to download unattend.xml
+    echo Check your internet connection
     pause
     exit /b 1
 )
 
 echo.
-echo Step 2: Unattend.xml placed successfully!
-echo.
-
-echo ================================================
-echo IMPORTANT - AFTER REBOOT:
-echo ================================================
-echo.
-echo The system will reboot and Windows will:
-echo 1. Apply the unattend.xml automatically
-echo 2. Create account: Admin
-echo 3. Password: (blank/empty)
-echo 4. Auto-login once to finish setup
-echo.
-echo IF YOU SEE A LOGIN SCREEN:
-echo - Username: Admin
-echo - Password: Leave blank, just press Enter
+echo Download successful!
 echo.
 echo ================================================
+echo AFTER REBOOT - LOGIN INFORMATION:
+echo ================================================
+echo Username: Admin
+echo Password: (blank - just press Enter)
 echo.
-echo Press any key to restart OOBE and apply configuration...
+echo The system will auto-login once, then require
+echo the password on subsequent logins.
+echo.
+echo NOTE: The Microsoft account screen will be
+echo       completely bypassed this time!
+echo ================================================
+echo.
+echo Press any key to apply configuration and reboot...
 pause >nul
 
-:: Restart OOBE process to pick up the unattend.xml
 echo.
-echo Restarting OOBE...
-echo.
-
-:: Method 1: Use the OOBE BypassNRO command
-cd %WINDIR%\System32\oobe
-start /wait BypassNRO.cmd
-
-:: If BypassNRO doesn't exist, just reboot
-if errorlevel 1 (
-    echo BypassNRO not found, rebooting normally...
-    shutdown /r /t 3 /c "Restarting to apply unattend.xml"
-)
+echo Applying unattend.xml and rebooting...
+%WINDIR%\System32\Sysprep\Sysprep.exe /oobe /unattend:C:\Windows\Panther\unattend.xml /reboot
