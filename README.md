@@ -1,174 +1,142 @@
 # Windows 11 OOBE Bypass
 
-A single-file solution to bypass Microsoft's account requirement during Windows 11 installation, with customizable debloating profiles.
+Simple script to bypass Microsoft account requirement during Windows 11 installation using [Chris Titus Tech's proven method](https://github.com/ChrisTitusTech/bypassnro).
 
-## 🚀 Quick Start
+## Quick Start
 
 During Windows 11 installation (OOBE screen):
 
 1. Press `Shift + F10` to open Command Prompt
-2. **Option A** - Download (requires internet):
+2. Run the script:
    ```batch
    curl -L -o bypass.cmd https://raw.githubusercontent.com/mxoio/bypassnro/main/bypass-oobe.cmd
    bypass.cmd
    ```
-3. **Option B** - From USB (works offline):
-   - Copy `bypass-oobe.cmd` to USB drive
-   - Run it from USB
-4. Follow the interactive prompts to configure your installation
+3. Enter your desired username (or press Enter for "Admin")
+4. System will reboot and complete setup with local account
 
-## 📋 Features
+## What It Does
 
-- ✅ **Single File** - Everything in one script, no separate XML files needed
-- ✅ **Interactive Setup** - Prompts for username and password
-- ✅ **Works Offline** - No internet connection required
-- ✅ **Custom Accounts** - Create your own username and password
-- ✅ **Multiple Profiles** - Choose from 4 different debloat levels
-- ✅ **Privacy-Focused** - Removes telemetry and bloatware
-- ✅ **Easy to Use** - Simple command-line interface
+- ✅ Creates local administrator account (no password required)
+- ✅ Bypasses Microsoft account requirement
+- ✅ Auto-login once to complete Windows setup
+- ✅ Removes bloatware (OneDrive, Teams, Xbox apps, Bing apps, etc.)
+- ✅ Configures privacy settings
+- ✅ Disables telemetry
 
-## 🎯 Installation Profiles
+## Files
 
-### 1. Minimal (Bypass Only)
-- **Bypasses Microsoft account requirement ONLY**
-- Creates local account with your chosen username
-- Keeps ALL Windows features intact
-- No bloatware removal
-- Ideal for: Users who just want to skip Microsoft account sign-in
+- **bypass-oobe.cmd** - Main script to run during OOBE
+- **unattend.xml** - Chris Titus Tech's proven unattend configuration
 
-### 2. Gaming (Bypass + Gaming Optimized)
-- Bypasses Microsoft account requirement
-- **Keeps gaming features** (Xbox, Game Bar, Game DVR)
-- Removes non-gaming bloatware (Office, Teams, Spotify, etc.)
-- Disables telemetry and tracking
-- Ideal for: Gaming PCs and users who want Xbox features
+## How to Use
 
-### 3. Standard (Balanced Debloat)
-- Bypasses Microsoft account requirement
-- Removes common bloatware (including Xbox apps)
-- Removes unnecessary Microsoft apps
-- Enhanced privacy settings
-- Shows file extensions and hidden files
-- Ideal for: Most users who want a cleaner system
+### Method 1: Download During OOBE (Requires Internet)
 
-### 4. Full Debloat (Maximum Privacy)
-- Bypasses Microsoft account requirement
-- **Removes almost all bloatware** (keeps only Store, Calculator, Photos, Terminal, Paint)
-- Disables OneDrive, Cortana, Windows Defender
-- Maximum privacy and telemetry blocking
-- Enables long path support
-- Disables Copilot, Widgets, Chat
-- Ideal for: Advanced users, developers, privacy enthusiasts
-
-## 🛠️ What Gets Configured
-
-### All Profiles Include:
-- ✅ Local account creation (bypasses Microsoft account)
-- ✅ Custom username and password
-- ✅ No security questions required
-- ✅ Skips OOBE privacy screens
-- ✅ Registry bypass for network requirement
-
-## 📖 Installation Instructions
-
-### Method 1: Download During Setup (Requires Internet)
-
-1. During Windows 11 installation, when you reach the Microsoft account screen:
-   - Press `Shift + F10` to open Command Prompt
-2. Run these commands:
+At the Microsoft account screen during Windows setup:
+1. Press `Shift + F10`
+2. Run:
    ```batch
    curl -L -o bypass.cmd https://raw.githubusercontent.com/mxoio/bypassnro/main/bypass-oobe.cmd
    bypass.cmd
    ```
-3. Follow the on-screen prompts:
-   - Choose your debloat profile (1-4)
-   - Enter your desired username
-   - Enter your password (or leave blank)
-4. The system will reboot and complete setup with your local account
 
-### Method 2: From USB (Works Offline)
+### Method 2: USB Drive (Offline)
 
-1. Download `bypass-oobe.cmd` to a USB drive before installation
-2. During Windows 11 installation, when you reach the Microsoft account screen:
-   - Press `Shift + F10` to open Command Prompt
-   - Type: `D:` (or whatever drive letter your USB is)
-   - Type: `bypass-oobe.cmd` (or whatever you named it)
-3. Follow the on-screen prompts
-4. The system will reboot and complete setup
+1. Download both files to a USB drive:
+   - bypass-oobe.cmd
+   - unattend.xml
+2. During Windows setup, press `Shift + F10`
+3. Navigate to USB drive (usually D: or E:)
+4. Run: `bypass-oobe.cmd`
 
-## 🔒 Security Notes
+## What Gets Removed
 
-- All scripts are open source and can be reviewed before use
-- Passwords are temporarily stored in `C:\Windows\Panther\unattend.xml` during setup
-- The unattend.xml file can be deleted after setup completes
-- No data is collected or sent anywhere
-- All changes are applied locally during installation
+Chris's configuration removes:
+- OneDrive
+- Teams
+- Cortana
+- Xbox apps
+- Office Hub
+- Mail & Calendar
+- Bing apps (News, Weather)
+- Clipchamp, Paint 3D, Mixed Reality
+- Feedback Hub, Tips, Get Help
+- And many more...
 
-## ⚙️ How It Works
+## What Gets Kept
 
-1. **BypassNRO Registry Key**: Sets `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE\BypassNRO` to skip network requirement
-2. **Dynamic XML Generation**: Creates unattend.xml on-the-fly based on your selections
-3. **Local Account Creation**: Creates a local administrator account with your credentials
-4. **FirstLogonCommands**: Runs PowerShell and registry commands on first boot to remove bloatware and configure privacy settings
+Essential apps are preserved:
+- Microsoft Store
+- Windows Terminal
+- Notepad
+- Calculator
+- Settings
 
-## 🔧 Files in This Repository
+## Technical Details
 
-- **bypass-oobe.cmd** - The all-in-one script (recommended)
-- **bypass.cmd** - Original script that uses separate XML files
-- **unattend-*.xml** - Separate XML files for each profile (optional, for manual customization)
-- **FIXES.md** - Details of what was fixed in this version
-- **TESTING-GUIDE.md** - Comprehensive testing instructions
+This script uses Chris Titus Tech's `unattend.xml` which:
 
-## 🆚 Which File Should I Use?
+1. **windowsPE pass** - Accepts EULA automatically
+2. **specialize pass** - Extracts embedded PowerShell scripts and runs configuration
+3. **oobeSystem pass** - Creates local accounts with AutoLogon
+4. **FirstLogon** - Runs cleanup scripts and disables auto-login
 
-- **Use `bypass-oobe.cmd`** if you want a single file that's easy to manage (recommended)
-- **Use `bypass.cmd` + XML files** if you want to customize the XML files yourself
+The unattend.xml contains embedded PowerShell scripts that:
+- Remove provisioned app packages
+- Disable Windows capabilities (features)
+- Configure privacy settings
+- Set taskbar preferences
+- Remove bloatware
 
-## 🐛 Troubleshooting
+## Logs
 
-### "Script Can't Find unattend.xml"
-- Make sure you're running the script during OOBE with Shift+F10
-- Check that `C:\Windows\Panther` directory exists
-- Try running Command Prompt as Administrator
+After setup completes, check these logs to verify:
+- `C:\Windows\Setup\Scripts\Specialize.log` - Main configuration log
+- `C:\Windows\Setup\Scripts\RemovePackages.log` - App removal log
+- `C:\Windows\Setup\Scripts\FirstLogon.log` - First boot configuration
 
-### "System Still Asks for Microsoft Account"
-- The BypassNRO command may not have executed
-- Try the manual method:
-  ```batch
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /v BypassNRO /t REG_DWORD /d 1 /f
-  shutdown /r /t 5
-  ```
+## Customization
 
-### "User Account Not Created"
-- Check that the unattend.xml file was created in `C:\Windows\Panther\`
-- Verify your username doesn't contain special characters
-- Try using the Minimal profile first to isolate issues
+The script allows you to customize the username. If you want to customize what gets removed:
 
-## 🤝 Credits
+1. Edit `unattend.xml`
+2. Modify the app lists in the `RemovePackages.ps1` section
+3. Save and use your customized version
 
-Based on the original concept by [ChrisTitusTech](https://github.com/ChrisTitusTech/bypassnro)
+## Troubleshooting
 
-Enhanced with:
-- Single-file operation (no separate XML files needed)
-- Dynamic XML generation
-- Multiple debloat profiles
-- Custom username/password support
-- Gaming-optimized profile
+### Still Asks for Microsoft Account
 
-## ⚠️ Disclaimer
+- Verify `C:\Windows\Panther\unattend.xml` exists and has content
+- Check `C:\Windows\Panther\setupact.log` for errors
+- Try downloading the script again
 
-This tool modifies Windows installation behavior. Use at your own risk. Always backup important data before installing Windows.
+### No Apps Removed
 
-**Important**: Full Debloat profile disables Windows Defender - only use if you plan to install alternative security software.
+- Check `C:\Windows\Setup\Scripts\RemovePackages.log`
+- Scripts run on first login, give it a few minutes
+- Some apps may only be available after Windows Update
 
-## 📝 License
+### Can't Login
 
-MIT License - Feel free to modify and distribute
+- Default account is "Admin" with no password
+- If you customized the username, use that instead
+- Press Enter at password prompt (no password set)
 
-## 🐛 Issues
+## Credits
 
-Found a bug or have a suggestion? [Open an issue](https://github.com/mxoio/bypassnro/issues)
+- **Chris Titus Tech** - Original unattend.xml and bypass method
+- Based on [schneegans.de unattend generator](https://schneegans.de/windows/unattend-generator/)
+
+## License
+
+MIT License - Free to use, modify, and distribute
+
+## Disclaimer
+
+This modifies Windows installation. Use at your own risk. Backup important data before installing Windows.
 
 ---
 
-**Note**: This is designed for Windows 11 and has been tested on version 24H2 and newer builds where Microsoft has removed the traditional bypass methods.
+**Tested on**: Windows 11 23H2, 24H2
