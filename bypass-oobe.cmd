@@ -27,6 +27,31 @@ echo.
 :: Get script directory
 set "SCRIPT_DIR=%~dp0"
 
+:: Create login info file for the desktop
+echo Creating login information file...
+(
+echo ================================================
+echo Windows 11 OOBE Bypass - Login Information
+echo ================================================
+echo.
+echo Your local account has been created!
+echo.
+echo Username: %username%
+echo Password: ^(blank - no password set^)
+echo.
+echo To set a password:
+echo 1. Press Windows + I to open Settings
+echo 2. Go to Accounts ^> Sign-in options
+echo 3. Click Password ^> Add
+echo.
+echo Bloatware removal is running in the background.
+echo Check these logs to see what was removed:
+echo - C:\Windows\Setup\Scripts\RemovePackages.log
+echo - C:\Windows\Setup\Scripts\Specialize.log
+echo.
+echo ================================================
+) > "C:\Users\Public\Desktop\LOGIN-INFO.txt"
+
 :: Check for local unattend.xml first
 if exist "%SCRIPT_DIR%unattend.xml" (
     echo Using local unattend.xml...
@@ -68,8 +93,17 @@ if not "%username%"=="Admin" (
 echo.
 echo Configuration ready!
 echo.
+echo ================================================
+echo IMPORTANT - LOGIN INFORMATION:
+echo ================================================
 echo Username: %username%
-echo Password: None (you can set one after first login)
+echo Password: (blank - just press Enter)
+echo.
+echo If auto-login fails and you see a login screen:
+echo 1. Type username: %username%
+echo 2. Leave password blank (press Enter)
+echo 3. You will login and see desktop
+echo ================================================
 echo.
 echo The system will now:
 echo 1. Apply unattend.xml using Sysprep
